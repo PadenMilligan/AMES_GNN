@@ -1,0 +1,79 @@
+
+# a sample yaml input file
+
+debug: False
+
+# the type of graph definition to be used 
+graphType: 'covalent'
+
+nodeFeatures:   # the following are a list of mendeleev recognised keywords
+   - 'atomic_number'
+   - 'covalent_radius'
+   - 'vdw_radius'
+   - 'electron_affinity'
+   - 'en_pauling'
+
+# to the above physico-chemical node features we will add others to top up to nTotalNodeFeatures
+
+nTotalNodeFeatures: 15
+nMaxNeighbours: 6
+useCovalentRadii: True
+
+EdgeFeatures:
+   r_min: 0.4
+   r_max: 7.0
+   n_features: 20
+   sigma: 0.01
+
+AngleFeatures:
+   n_features: 10
+   sigma: 0.1
+   norm: True
+
+DihedralFeatures:
+   n_features: 10
+   sigma: 0.1
+   norm: True
+
+nEpochs: 200
+nBatch: 64
+nCheckpoint: 10
+randomSeed: 42
+nTrainMaxEntries: 5000
+nValMaxEntries: 500
+nNuerons: 28
+patienceValue: 100
+nFolds: 5
+saveModel: True
+loadModel: True
+
+# the following command should be set to true if force information is to be used in the fitting of the model
+calculateForces: False      
+
+# the following command specifies if the model.state_dict() and optimizer.state_dict() are to be loaded
+# from a checkpoint file from a previous run 
+# loadModel: 'GraphPotential-6nn-0gcl-2fcl-07122021-160202.tar'
+
+warmStart: 'GraphPotential-6nn-0gcl-2fcl-07122021-160202.tar'
+
+# this only gives the starting learning rate iff loadModel = False; otherwise it is read from checkpoint file
+learningRate: 1.0e-4
+
+callbacks: 
+   earlyStopping:
+      patience: 10
+      min_delta: 1.0e-5
+   LRScheduler:
+      patience: 2
+      min_lr: 1.0e-6
+      factor: 0.5
+   UserStopping:
+
+descriptionText: No data transformation
+
+trainDir: './DataBase/MTL_DNN_pkl/'
+loadPath: './models/20231128-131438-fold 1'
+
+# transformData: std
+
+
