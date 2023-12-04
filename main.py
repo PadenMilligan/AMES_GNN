@@ -157,6 +157,3 @@ else:
     accuracy[3].append(s4)
     accuracy[4].append(s5)
 
-#Uses average accuracy of each strain to calulcate a predicted accuracy u
-s1, s2, s3, s4, s5 = average(accuracy[0]), average(accuracy[1]), average(accuracy[2]), average(accuracy[3]), average(accuracy[4])
-print(f"Predicted accuracy of final test {1 - (1 - s1) * (1 - s2) * (1 - s3) * (1 - s4) * (1 - s5)}")
