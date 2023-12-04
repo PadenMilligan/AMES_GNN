@@ -119,7 +119,7 @@ testDir = input_data.get("testDir", "./DataBase/test/")
 directories = [trainDir, valDir, testDir]
 
 
-trainDataset = GraphDataSet(trainDir, Graphs, nMaxEntries=nTrainMaxEntries, seed=seed, transform=transform, file_extension = fileExtension)
+trainDataset = GraphDataSet(trainDir, Graphs, seed=seed, transform=transform, file_extension = fileExtension)
 
 def average(list):
     return sum(list) / len(list)
@@ -131,12 +131,14 @@ neurons = input_data.get("nNeurons", 28)
 load_path = input_data.get("loadPath", "./models/")
 accuracy = [[],[],[],[],[]]
 
+#trains a model for each fold and saves the accuracy and the model if save_model = True
 if load_model == False:
+    print(f"Training model with learning rate:{learningRate}, batch:{nBatch}, epochs:{nEpochs}, neurons:{neurons}")
     for i in range(num_folds):
-        model_name = "./log/" + datetime.now().strftime("%Y%m%d-%H%M%S-fold " + str(i + 1))
-        writer = SummaryWriter(model_name)
+        model_name = datetime.now().strftime("%Y%m%d-%H%M%S-fold " + str(i + 1))
+        writer = SummaryWriter("./log/" + model_name)
         dataset = trainDataset.shuffle()
-        print(f"Fold: {i + 1}")
+        print(f"Fold: {i + 1}/{num_folds}")
         model, s1, s2, s3, s4, s5 = train(dataset, task, writer, patience, nEpochs, nBatch, neurons, learningRate)
         accuracy[0].append(s1)
         accuracy[1].append(s2)
@@ -144,9 +146,9 @@ if load_model == False:
         accuracy[3].append(s4)
         accuracy[4].append(s5)
         if save_model == True:
-            torch.save(model, model_name)
+            torch.save(model, "./models/" + model_name)
 else:
-    model = torch.load("./models/20231128-131438-fold 1")
+    model = torch.load(load_path)
     loader = DataLoader(trainDataset, batch_size = nBatch, shuffle=True)
     test_acc, s1, s2, s3, s4, s5 = test(loader, model)
     accuracy[0].append(s1)
@@ -155,7 +157,6 @@ else:
     accuracy[3].append(s4)
     accuracy[4].append(s5)
 
+#Uses average accuracy of each strain to calulcate a predicted accuracy u
 s1, s2, s3, s4, s5 = average(accuracy[0]), average(accuracy[1]), average(accuracy[2]), average(accuracy[3]), average(accuracy[4])
 print(f"Predicted accuracy of final test {1 - (1 - s1) * (1 - s2) * (1 - s3) * (1 - s4) * (1 - s5)}")
-
-

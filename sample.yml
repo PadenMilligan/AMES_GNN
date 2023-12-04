@@ -42,7 +42,7 @@ randomSeed: 42
 nTrainMaxEntries: 5000
 nValMaxEntries: 500
 nNuerons: 28
-patienceValue: 100
+patienceValue: 10
 nFolds: 5
 saveModel: True
 loadModel: True
@@ -72,7 +72,7 @@ callbacks:
 descriptionText: No data transformation
 
 trainDir: './DataBase/MTL_DNN_pkl/'
-loadPath: './models/20231128-131438-fold 1'
+loadPath: './models/20231129-103139-fold 3'
 
 # transformData: std
 
